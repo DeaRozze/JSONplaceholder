@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSONPlaceholder API Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      button {
+        margin: 5px;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        overflow-x: auto;
+        max-height: 300px;
+      }
+      ul {
+        background-color: #f9f9f9;
+        padding: 10px;
+        list-style-type: disc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Работа с JSONPlaceholder</h1>
+
+    <button onclick="getAllPosts()">Получить все посты</button>
+    <button onclick="getPostById()">Получить пост с ID = 1</button>
+    <button onclick="createPost()">Создать пост</button>
+    <button onclick="updatePost()">Обновить пост</button>
+    <button onclick="deletePost()">Удалить пост</button>
+    <button onclick="fetchAndShowTitles()">Заголовки постов (ID 1–5)</button>
+
+    <h2>Результат:</h2>
+    <pre id="output">Нажми кнопку, чтобы увидеть результат...</pre>
+
+    <h2>Заголовки:</h2>
+    <ul id="titles"></ul>
+
+    <script>
+      const output = document.getElementById("output");
+      const titlesList = document.getElementById("titles");
+
+      function getAllPosts() {
+        fetch("https://jsonplaceholder.typicode.com/posts")
+          .then((res) => res.json())
+          .then((data) => {
+            output.textContent = JSON.stringify(data, null, 2);
+          });
+      }
+
+      function getPostById() {
+        fetch("https://jsonplaceholder.typicode.com/posts/1")
+          .then((res) => res.json())
+          .then((data) => {
+            output.textContent = JSON.stringify(data, null, 2);
+          });
+      }
+
+      function createPost() {
+        fetch("https://jsonplaceholder.typicode.com/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: "Новый пост",
+            body: "Это тело нового поста.",
+            userId: 1,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            output.textContent = JSON.stringify(data, null, 2);
+          });
+      }
+
+      function updatePost() {
+        fetch("https://jsonplaceholder.typicode.com/posts/1", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: 1,
+            title: "Обновленный заголовок",
+            body: "Обновленное тело поста.",
+            userId: 1,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            output.textContent = JSON.stringify(data, null, 2);
+          });
+      }
+
+      function deletePost() {
+        fetch("https://jsonplaceholder.typicode.com/posts/1", {
+          method: "DELETE",
+        }).then((res) => {
+          output.textContent = `Статус удаления: ${res.status}`;
+        });
+      }
+
+      // 🔹 Promise.all и отображение заголовков
+      function fetchMultiplePosts() {
+        const ids = [1, 2, 3, 4, 5];
+        const requests = ids.map((id) =>
+          fetch(`https://jsonplaceholder.typicode.com/posts/${id}`).then(
+            (res) => res.json()
+          )
+        );
+        return Promise.all(requests);
+      }
+
+      function displayTitles(posts) {
+        titlesList.innerHTML = ""; // очищаем старый список
+        posts.forEach((post) => {
+          const li = document.createElement("li");
+          li.textContent = post.title;
+          titlesList.appendChild(li);
+        });
+      }
+
+      function fetchAndShowTitles() {
+        fetchMultiplePosts()
+          .then(displayTitles)
+          .catch((err) => {
+            output.textContent =
+              "Ошибка при загрузке заголовков: " + err.message;
+          });
+      }
+    </script>
+  </body>
+</html>
