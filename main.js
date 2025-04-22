@@ -1,6 +1,6 @@
 import { getAllPosts } from "/api/getAllPosts.js";
 import { createPost } from "/api/createPost.js";
-import { updatePost } from "./api/updatePost.js";
+import { updatePost } from "/api/updatePost.js";
 import getPostById from "/api/getPostById.js";
 import deletePost from "/api/deletePost.js";
 
