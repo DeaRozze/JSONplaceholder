@@ -1,8 +1,8 @@
-import { getAllPosts } from "/api/getAllPosts.js";
-import { createPost } from "/api/createPost.js";
-import { updatePost } from "/api/updatePost.js";
-import getPostById from "/api/getPostById.js";
-import deletePost from "/api/deletePost.js";
+import { getAllPosts } from "./api/getAllPosts.js";
+import { createPost } from "./api/createPost.js";
+import { updatePost } from "./api/updatePost.js";
+import getPostById from "./api/getPostById.js";
+import deletePost from "./api/deletePost.js";
 
 const output = document.getElementById("output");
 const titlesList = document.getElementById("titles");
@@ -24,7 +24,7 @@ document
   .addEventListener("click", () => deletePost(output));
 
 document.getElementById("titles-btn").addEventListener("click", async () => {
-  const { fetchMultiplePosts, displayTitles } = await import("/api/titles.js");
+  const { fetchMultiplePosts, displayTitles } = await import("./api/titles.js");
   const posts = await fetchMultiplePosts();
   displayTitles(posts, titlesList);
 });
